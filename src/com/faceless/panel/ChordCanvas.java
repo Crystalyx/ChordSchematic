@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import com.faceless.chords.Chords;
+import com.faceless.chords.Note;
 import com.faceless.core.Main;
 
 @SuppressWarnings("serial")
@@ -35,6 +37,12 @@ public class ChordCanvas extends Canvas
 				g.fillOval(-2 - s + Integer.parseInt(Main.chord[i]) * d, 20 + d * i - s, s * 2, s * 2);
 			}
 			g.setColor(Color.lightGray);
+
+			Note[] notes = Main.tune;
+			for (int j = 0; j <= 12; j++)
+			{
+				g.drawString(notes[i].add(j).toString(), d * j, 25 + i * d);
+			}
 		}
 		for (int i = 0; i < 13; i++)
 		{

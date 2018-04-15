@@ -11,17 +11,4 @@ public class ChordPanel extends JPanel
 	{
 		super();
 	}
-	
-	@Override
-	public void repaint()
-	{
-		super.repaint();
-	}
-	
-	@Override
-	public void update(Graphics g)
-	{
-		super.update(g);
-	}
-
 }

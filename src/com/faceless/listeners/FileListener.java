@@ -22,7 +22,7 @@ public class FileListener implements ActionListener
 			String chordl = Main.textload.getText();
 			int varl = (int) Main.varload.getValue();
 			String[] rawchord = Chords.getChord(chordl, varl);
-			if (rawchord != Chords.EmptyChord)
+			if (!rawchord.equals(Chords.EmptyChord))
 			{
 				Main.chord = rawchord;
 			}
@@ -31,6 +31,9 @@ public class FileListener implements ActionListener
 			String chords = Main.textsave.getText();
 			int vars = (int) Main.varsave.getValue();
 			Chords.saveChord(chords, vars, Main.chord);
+			break;
+		case "output":
+			Main.save();
 			break;
 		}
 	}

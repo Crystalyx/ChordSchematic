@@ -34,7 +34,6 @@ public class ChordListener implements MouseListener
 		int l = Math.floorDiv(x - 20, 45);
 		if (n < 6)
 		{
-			System.out.println(l + 1 + "|" + Main.chord[n]);
 			switch (l)
 			{
 			case -1:
@@ -45,7 +44,6 @@ public class ChordListener implements MouseListener
 				{
 					int ch = Integer.parseInt(Main.chord[n]);
 					Main.chord[n] = ch == l + 1 ? "0" : "" + (l + 1);
-					System.out.println(ch == l + 1);
 				}
 				else
 				{

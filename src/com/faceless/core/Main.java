@@ -24,10 +24,12 @@ import com.faceless.listeners.ChordListener;
 import com.faceless.listeners.CloseListener;
 import com.faceless.listeners.FileListener;
 import com.faceless.listeners.TuningListener;
+import com.faceless.listeners.UtilListener;
 import com.faceless.panel.ChordCanvas;
 import com.faceless.panel.ChordPanel;
 
 import Utilities.Library;
+import Utilities.Logger;
 
 public class Main
 {
@@ -39,6 +41,7 @@ public class Main
 	public static ChordListener chorder = new ChordListener();
 	public static FileListener filer = new FileListener();
 	public static CloseListener closer = new CloseListener();
+	public static UtilListener utiler = new UtilListener();
 
 	public static JTextField textload;
 	public static JTextField textsave;
@@ -53,6 +56,7 @@ public class Main
 
 	public static void main(String[] args)
 	{
+		Logger.info(Note.A.add(1).toString());
 		load();
 		createFrame();
 
@@ -135,6 +139,26 @@ public class Main
 		canvas.setBackground(Color.white);
 		chordPanel.add(canvas);
 
+		JPanel managepan = new JPanel();
+
+		JButton clear = new JButton("Clear");
+		clear.setName("clear");
+		clear.addActionListener(utiler);
+		managepan.add(clear);
+
+		JButton managleft = new JButton("-1");
+		managleft.setName("managleft");
+		managleft.addActionListener(utiler);
+		managepan.add(managleft);
+		
+		JButton managright = new JButton("+1");
+		managright.setName("managright");
+		managright.addActionListener(utiler);
+		managepan.add(managright);
+		chordPanel.add(managepan);
+
+		JPanel filepan = new JPanel();
+
 		JPanel savingpan = new JPanel();
 		JPanel loadingpan = new JPanel();
 		JButton chsave = new JButton("Save");
@@ -160,8 +184,17 @@ public class Main
 		loadingpan.add(textload);
 		loadingpan.add(varload);
 		loadingpan.add(chload);
-		chordPanel.add(savingpan);
-		chordPanel.add(loadingpan);
+		filepan.add(savingpan);
+		filepan.add(loadingpan);
+
+		JPanel savepan = new JPanel();
+		JButton output = new JButton("Output");
+		output.setName("output");
+		output.addActionListener(filer);
+		savepan.add(output);
+		filepan.add(savepan);
+		chordPanel.add(filepan);
+
 		JPanel pan = new JPanel();
 		pan.setBounds(0, 0, 800, 600);
 		frame.add(pan);
