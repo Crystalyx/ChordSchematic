@@ -3,6 +3,7 @@ package com.faceless.core;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -13,13 +14,20 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.faceless.chords.Chords;
 import com.faceless.chords.Note;
 import com.faceless.listeners.ChordListener;
+import com.faceless.listeners.CloseListener;
+import com.faceless.listeners.FileListener;
 import com.faceless.listeners.TuningListener;
 import com.faceless.panel.ChordCanvas;
 import com.faceless.panel.ChordPanel;
+
+import Utilities.Library;
 
 public class Main
 {
@@ -29,21 +37,45 @@ public class Main
 	public static Canvas canvas;
 	public static TuningListener tuner = new TuningListener();
 	public static ChordListener chorder = new ChordListener();
+	public static FileListener filer = new FileListener();
+	public static CloseListener closer = new CloseListener();
+
+	public static JTextField textload;
+	public static JTextField textsave;
+	public static JSpinner varload;
+	public static JSpinner varsave;
 
 	public static Note[] tune = new Note[] { Note.E, Note.B, Note.G, Note.D, Note.A, Note.E };
 	public static JLabel[] labels = new JLabel[6];
-	public static String[] chord = new String[] { "0", "0", "0", "0", "0", "0" };
+	public static String[] chord = Chords.EmptyChord;
+
+	public static Library chordlib = new Library("chords");
 
 	public static void main(String[] args)
 	{
+		load();
 		createFrame();
 
 		frame.setVisible(true);
 	}
 
+	private static void load()
+	{
+		chordlib.read();
+		Chords.chords = chordlib.knowlege;
+	}
+
+	public static void save()
+	{
+		chordlib.knowlege = Chords.chords;
+		chordlib.output();
+	}
+
 	public static void createFrame()
 	{
 		frame = new JFrame();
+		frame.addWindowListener(closer);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(800, 600);
 		JMenuBar menu = new JMenuBar();
 		menu.setSize(800, 30);
@@ -81,7 +113,7 @@ public class Main
 			butpanel.add(note, BorderLayout.WEST);
 			butpanel.add(sharp, BorderLayout.WEST);
 		}
-		
+
 		JButton flat = new JButton("♭");
 		flat.setName("f" + 6);
 		flat.addActionListener(tuner);
@@ -103,6 +135,33 @@ public class Main
 		canvas.setBackground(Color.white);
 		chordPanel.add(canvas);
 
+		JPanel savingpan = new JPanel();
+		JPanel loadingpan = new JPanel();
+		JButton chsave = new JButton("Save");
+		chsave.setName("save");
+		chsave.addActionListener(filer);
+		JButton chload = new JButton("Load");
+		chload.setName("load");
+		chload.addActionListener(filer);
+
+		textsave = new JTextField();
+		textsave.setPreferredSize(new Dimension(80, 30));
+		textload = new JTextField();
+		textload.setPreferredSize(new Dimension(80, 30));
+
+		varload = new JSpinner();
+		varload.setPreferredSize(new Dimension(30, 30));
+		varsave = new JSpinner();
+		varsave.setPreferredSize(new Dimension(30, 30));
+
+		savingpan.add(textsave);
+		savingpan.add(varsave);
+		savingpan.add(chsave);
+		loadingpan.add(textload);
+		loadingpan.add(varload);
+		loadingpan.add(chload);
+		chordPanel.add(savingpan);
+		chordPanel.add(loadingpan);
 		JPanel pan = new JPanel();
 		pan.setBounds(0, 0, 800, 600);
 		frame.add(pan);

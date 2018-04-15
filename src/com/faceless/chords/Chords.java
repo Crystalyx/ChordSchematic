@@ -2,25 +2,31 @@ package com.faceless.chords;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 public class Chords
 {
-	public HashMap<String, String> chords = new HashMap<String, String>();
+	public static HashMap<String, String> chords = new HashMap<String, String>();
+	public static final String[] EmptyChord = new String[] { "0", "0", "0", "0", "0", "0" };
 
-	public String[] getChord(String name, int variant)
+	public static String[] getChord(String name, int variant)
 	{
-		if (chords.containsKey(name))
+		String key = compact(name, variant + "");
+		if (chords.containsKey(compact(name, variant + "")))
 		{
-			Entry[] ents = chords.entrySet().stream().filter(e -> e.getKey() == compact(name, variant + "")).toArray(Entry[]::new);
-			String rawchord = chords.get(name);
-			if (ents.length > 0)
-				rawchord = (String) ents[0].getValue();
+			String rawchord = chords.get(key);
 			ArrayList<String> alstr = unpact(rawchord);
-			alstr.remove(0);
 			return alstr.toArray(new String[0]);
 		}
-		return new String[] { "0", "0", "0", "0", "0", "0" };
+		return EmptyChord;
+	}
+
+	public static void saveChord(String name, int variant, String[] raw)
+	{
+		String key = compact(name, variant + "");
+		if (!chords.containsKey(key))
+		{
+			chords.put(key, compact(raw));
+		}
 	}
 
 	public static ArrayList<String> unpact(String s)
