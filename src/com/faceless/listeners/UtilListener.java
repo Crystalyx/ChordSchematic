@@ -3,6 +3,7 @@ package com.faceless.listeners;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 
 import com.faceless.core.Main;
@@ -28,7 +29,12 @@ public class UtilListener implements ActionListener
 					if (name == "managleft")
 						ch -= 1;
 					ch = Math.floorMod(ch, 12);
-					Main.chord[i] = "" + ch;
+					if (ch == 0)
+					{
+						Main.chord[i] = "0";
+					}
+					else
+						Main.chord[i] = "" + ch;
 				}
 			}
 			break;
@@ -38,9 +44,20 @@ public class UtilListener implements ActionListener
 				Main.chord[i] = "0";
 			}
 			break;
+		case "removevar":
+			boolean f = ((AbstractButton) e.getSource()).isSelected();
+			Main.varlabel.setVisible(!f);
+			if (f)
+			{
+				((AbstractButton) e.getSource()).setText(">");
+			}
+			else
+			{
+				((AbstractButton) e.getSource()).setText("<");
+			}
+			break;
 		}
-		Main.canvas.repaint();
-		Main.chordPanel.repaint();
+		RedrawListener.redo();
 	}
 
 }

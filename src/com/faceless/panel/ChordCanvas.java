@@ -5,13 +5,15 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-import com.faceless.chords.Chords;
 import com.faceless.chords.Note;
 import com.faceless.core.Main;
 
 @SuppressWarnings("serial")
 public class ChordCanvas extends Canvas
 {
+
+	public static int dx = 24;
+
 	@Override
 	public void paint(Graphics g)
 	{
@@ -22,7 +24,7 @@ public class ChordCanvas extends Canvas
 		g.setColor(Color.lightGray);
 		for (int i = 0; i < 6; i++)
 		{
-			g.drawLine(10, 20 + i * d, 30 + d * 12, 20 + i * d);
+			g.drawLine(10 + dx, 20 + i * d, 30 + dx + d * 11, 20 + i * d);
 			if (Main.chord[i] == "X")
 				g.setColor(Color.red);
 			else
@@ -30,23 +32,25 @@ public class ChordCanvas extends Canvas
 					g.setColor(Color.black);
 				else
 					g.setColor(Color.blue);
-			g.drawString(Main.chord[i], 0, 25 + i * d);
+			g.drawString(Main.chord[i], +dx, 25 + i * d);
 			g.setColor(Color.black);
 			if (Main.chord[i] != "X" && Main.chord[i] != "0")
 			{
-				g.fillOval(-2 - s + Integer.parseInt(Main.chord[i]) * d, 20 + d * i - s, s * 2, s * 2);
+				g.fillOval(6-s + dx + Integer.parseInt(Main.chord[i]) * d, 20 + d * i - s, s * 2, s * 2);
 			}
 			g.setColor(Color.lightGray);
-
-			Note[] notes = Main.tune;
-			for (int j = 0; j <= 12; j++)
+			if (Main.notes.isSelected())
 			{
-				g.drawString(notes[i].add(j).toString(), d * j, 25 + i * d);
+				Note[] notes = Main.tune;
+				for (int j = 0; j <= 11; j++)
+				{
+					g.drawString(notes[i].add(j).toString(), d * j, 25 + i * d);
+				}
 			}
 		}
-		for (int i = 0; i < 13; i++)
+		for (int i = 0; i < 12; i++)
 		{
-			g.drawLine(20 + d * i, 10, 20 + d * i, 30 + 5 * d);
+			g.drawLine(20 + dx + d * i, 10, 20 + dx + d * i, 30 + 5 * d);
 		}
 	}
 

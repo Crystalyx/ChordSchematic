@@ -36,11 +36,16 @@ public class TuningListener implements ActionListener
 			{
 				int ch = Integer.parseInt(Main.chord[num]);
 				if (sf == 's')
-					ch += 1;
-				if (sf == 'f')
 					ch -= 1;
+				if (sf == 'f')
+					ch += 1;
 				ch = Math.floorMod(ch, 12);
-				Main.chord[num] = "" + ch;
+				if (ch == 0)
+				{
+					Main.chord[num] = "0";
+				}
+				else
+					Main.chord[num] = "" + ch;
 			}
 		}
 		if (num == 6)
@@ -63,16 +68,20 @@ public class TuningListener implements ActionListener
 				{
 					int ch = Integer.parseInt(Main.chord[i]);
 					if (sf == 's')
-						ch += 1;
-					if (sf == 'f')
 						ch -= 1;
+					if (sf == 'f')
+						ch += 1;
 					ch = Math.floorMod(ch, 12);
-					Main.chord[i] = "" + ch;
+					if (ch == 0)
+					{
+						Main.chord[i] = "0";
+					}
+					else
+						Main.chord[i] = "" + ch;
 				}
 			}
 		}
-		Main.canvas.repaint();
-		Main.buttonPanel.repaint();
+		RedrawListener.redo();
 	}
 
 }

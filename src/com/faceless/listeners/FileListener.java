@@ -36,6 +36,7 @@ public class FileListener implements ActionListener
 			Main.save();
 			break;
 		}
+		RedrawListener.redo();
 	}
 
 }

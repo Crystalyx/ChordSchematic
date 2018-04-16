@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
@@ -14,8 +15,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 
 import com.faceless.chords.Chords;
@@ -23,6 +26,7 @@ import com.faceless.chords.Note;
 import com.faceless.listeners.ChordListener;
 import com.faceless.listeners.CloseListener;
 import com.faceless.listeners.FileListener;
+import com.faceless.listeners.RedrawListener;
 import com.faceless.listeners.TuningListener;
 import com.faceless.listeners.UtilListener;
 import com.faceless.panel.ChordCanvas;
@@ -42,11 +46,15 @@ public class Main
 	public static FileListener filer = new FileListener();
 	public static CloseListener closer = new CloseListener();
 	public static UtilListener utiler = new UtilListener();
+	public static RedrawListener redrawer = new RedrawListener();
 
 	public static JTextField textload;
 	public static JTextField textsave;
 	public static JSpinner varload;
 	public static JSpinner varsave;
+	public static JRadioButton notes;
+	public static JLabel chordlabel;
+	public static JLabel varlabel;
 
 	public static Note[] tune = new Note[] { Note.E, Note.B, Note.G, Note.D, Note.A, Note.E };
 	public static JLabel[] labels = new JLabel[6];
@@ -56,7 +64,7 @@ public class Main
 
 	public static void main(String[] args)
 	{
-		Logger.info(Note.A.add(1).toString());
+		Logger.info(Note.A.toString() + "->" + Note.A.add(1).toString());
 		load();
 		createFrame();
 
@@ -67,6 +75,7 @@ public class Main
 	{
 		chordlib.read();
 		Chords.chords = chordlib.knowlege;
+		Chords.setupNames();
 	}
 
 	public static void save()
@@ -99,7 +108,16 @@ public class Main
 		buttonPanel.setBackground(Color.WHITE);
 		buttonPanel.setBorder(BorderFactory.createTitledBorder("Tuning"));
 		frame.add(buttonPanel);
+		JPanel buttontext = new JPanel();
+		buttontext.setBackground(Color.white);
+		JLabel buttontextlabel = new JLabel("Tuning");
+		buttontextlabel.setFont(new Font("Segoe", Font.PLAIN, 24));
+		buttontextlabel.setPreferredSize(new Dimension(120, 30));
+		buttontext.add(buttontextlabel);
+		buttonPanel.add(buttontext);
+
 		JPanel butpanel = new JPanel();
+		butpanel.setBackground(Color.white);
 		butpanel.setLocation(100, 200);
 		butpanel.setLayout(new GridLayout(7, 1, 0, 20));
 		for (int i = 0; i < tune.length; i++)
@@ -113,33 +131,61 @@ public class Main
 			JButton sharp = new JButton("#");
 			sharp.setName("s" + i);
 			sharp.addActionListener(tuner);
-			butpanel.add(flat, BorderLayout.WEST);
-			butpanel.add(note, BorderLayout.WEST);
 			butpanel.add(sharp, BorderLayout.WEST);
+			butpanel.add(note, BorderLayout.WEST);
+			butpanel.add(flat, BorderLayout.WEST);
 		}
 
-		JButton flat = new JButton("♭");
-		flat.setName("f" + 6);
-		flat.addActionListener(tuner);
-		butpanel.add(flat, BorderLayout.WEST);
-		JLabel note = new JLabel("HH");
-		note.setVisible(false);
-		note.setHorizontalAlignment(SwingConstants.CENTER);
-		butpanel.add(note, BorderLayout.WEST);
 		JButton sharp = new JButton("#");
 		sharp.setName("s" + 6);
 		sharp.addActionListener(tuner);
 		butpanel.add(sharp, BorderLayout.WEST);
+		JLabel note = new JLabel("HH");
+		note.setVisible(false);
+		note.setHorizontalAlignment(SwingConstants.CENTER);
+		butpanel.add(note, BorderLayout.WEST);
+		JButton flat = new JButton("♭");
+		flat.setName("f" + 6);
+		flat.addActionListener(tuner);
+		butpanel.add(flat, BorderLayout.WEST);
 
 		buttonPanel.add(butpanel);
 
+		JPanel chordguess = new JPanel();
+		chordlabel = new JLabel("");
+		chordlabel.setOpaque(true);
+		chordlabel.setBackground(Color.WHITE);
+		chordlabel.setPreferredSize(new Dimension(120, 30));
+		chordlabel.setFont(new Font("Segoe", Font.PLAIN, 24));
+		chordguess.add(chordlabel);
+		varlabel = new JLabel("");
+		varlabel.setOpaque(true);
+		varlabel.setVisible(false);
+		varlabel.setBackground(Color.WHITE);
+		varlabel.setPreferredSize(new Dimension(30, 30));
+		varlabel.setFont(new Font("Segoe", Font.PLAIN, 24));
+		chordguess.add(varlabel);
+		JToggleButton removeVar = new JToggleButton(">");
+		removeVar.setSelected(true);
+		removeVar.setFont(new Font("Segoe", Font.PLAIN, 18));
+		removeVar.setPreferredSize(new Dimension(50, 30));
+		removeVar.setName("removevar");
+		removeVar.addActionListener(utiler);
+		chordguess.add(removeVar);
+		chordPanel.add(chordguess);
+
 		canvas = new ChordCanvas();
 		canvas.addMouseListener(chorder);
+		canvas.addMouseListener(redrawer);
 		canvas.setSize(600, 300);
 		canvas.setBackground(Color.white);
 		chordPanel.add(canvas);
 
 		JPanel managepan = new JPanel();
+
+		notes = new JRadioButton("Write Notes");
+		notes.addActionListener(redrawer);
+		managepan.add(notes);
 
 		JButton clear = new JButton("Clear");
 		clear.setName("clear");
@@ -149,11 +195,13 @@ public class Main
 		JButton managleft = new JButton("-1");
 		managleft.setName("managleft");
 		managleft.addActionListener(utiler);
+		managleft.addActionListener(redrawer);
 		managepan.add(managleft);
-		
+
 		JButton managright = new JButton("+1");
 		managright.setName("managright");
 		managright.addActionListener(utiler);
+		managright.addActionListener(redrawer);
 		managepan.add(managright);
 		chordPanel.add(managepan);
 
@@ -164,9 +212,11 @@ public class Main
 		JButton chsave = new JButton("Save");
 		chsave.setName("save");
 		chsave.addActionListener(filer);
+		chsave.addActionListener(redrawer);
 		JButton chload = new JButton("Load");
 		chload.setName("load");
 		chload.addActionListener(filer);
+		chload.addActionListener(redrawer);
 
 		textsave = new JTextField();
 		textsave.setPreferredSize(new Dimension(80, 30));
@@ -191,6 +241,7 @@ public class Main
 		JButton output = new JButton("Output");
 		output.setName("output");
 		output.addActionListener(filer);
+		output.addActionListener(redrawer);
 		savepan.add(output);
 		filepan.add(savepan);
 		chordPanel.add(filepan);
