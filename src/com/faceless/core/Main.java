@@ -122,7 +122,7 @@ public class Main
 		butpanel.setLayout(new GridLayout(7, 1, 0, 20));
 		for (int i = 0; i < tune.length; i++)
 		{
-			JButton flat = new JButton("♭");
+			JButton flat = new JButton("b");
 			flat.setName("f" + i);
 			flat.addActionListener(tuner);
 			JLabel note = new JLabel(tune[i].toString());
@@ -144,7 +144,7 @@ public class Main
 		note.setVisible(false);
 		note.setHorizontalAlignment(SwingConstants.CENTER);
 		butpanel.add(note, BorderLayout.WEST);
-		JButton flat = new JButton("♭");
+		JButton flat = new JButton("b");
 		flat.setName("f" + 6);
 		flat.addActionListener(tuner);
 		butpanel.add(flat, BorderLayout.WEST);

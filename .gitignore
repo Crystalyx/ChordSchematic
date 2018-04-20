@@ -63,4 +63,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-/bin/
+/bin
+/build/
+/
+/src/
+!/src/com/
